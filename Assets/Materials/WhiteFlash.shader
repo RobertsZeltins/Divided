@@ -3,7 +3,6 @@ Shader "Custom/WhiteFlash"
     Properties
     {
         _MainTex ("Sprite Texture", 2D) = "white" {}
-        // Alpha is driven per-frame by SpriteRenderer.color.a via vertex color.
     }
     SubShader
     {
@@ -15,7 +14,10 @@ Shader "Custom/WhiteFlash"
             "IgnoreProjector" = "True"
         }
 
-        Blend SrcAlpha OneMinusSrcAlpha
+        // SrcAlpha One = additive with alpha masking.
+        // Adds white on top of whatever is beneath — always visible, character gets
+        // brighter/whiter. Never invisible because addition can only increase pixel values.
+        Blend SrcAlpha One
         ZWrite Off
         Cull Off
         Lighting Off
@@ -32,7 +34,7 @@ Shader "Custom/WhiteFlash"
             {
                 float4 positionOS : POSITION;
                 float2 uv         : TEXCOORD0;
-                float4 color      : COLOR;        // SpriteRenderer.color fed in as vertex color
+                float4 color      : COLOR;
             };
 
             struct Varyings
@@ -45,25 +47,23 @@ Shader "Custom/WhiteFlash"
             TEXTURE2D(_MainTex);
             SAMPLER(sampler_MainTex);
 
-            CBUFFER_START(UnityPerMaterial)
-                float4 _MainTex_ST;
-            CBUFFER_END
-
             Varyings vert(Attributes IN)
             {
                 Varyings OUT;
                 OUT.positionHCS = TransformObjectToHClip(IN.positionOS.xyz);
-                OUT.uv          = TRANSFORM_TEX(IN.uv, _MainTex);
-                OUT.color       = IN.color;
+                // Raw UV — SpriteRenderer bakes atlas UVs into mesh vertices directly.
+                // TRANSFORM_TEX would apply _MainTex_ST on top of already-correct UVs,
+                // potentially zeroing them out and breaking the alpha lookup.
+                OUT.uv    = IN.uv;
+                OUT.color = IN.color;
                 return OUT;
             }
 
             half4 frag(Varyings IN) : SV_Target
             {
-                // Sample only the alpha from the sprite texture to preserve the sprite shape.
-                half alpha = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, IN.uv).a;
-                // Output solid white RGB; alpha = texture alpha * SpriteRenderer.color.a (for fading).
-                return half4(1.0h, 1.0h, 1.0h, alpha * IN.color.a);
+                half texAlpha = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, IN.uv).a;
+                half amount   = texAlpha * IN.color.a; // vertex alpha driven by sr.color.a
+                return half4(1.0h, 1.0h, 1.0h, amount);
             }
             ENDHLSL
         }

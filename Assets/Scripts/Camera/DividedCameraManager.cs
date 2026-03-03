@@ -254,6 +254,15 @@ public class DividedCameraManager : MonoBehaviour
     private float _botSplitZoom;
     private float _topSplitZoomVel;
     private float _botSplitZoomVel;
+    // Zoom (pull-back units) locked at the moment each character became inactive.
+    // The inactive camera holds this value; it only changes while that character is active.
+    private float _topLockedSplitZoom;
+    private float _botLockedSplitZoom;
+
+    [Tooltip("How quickly (units/second) the locked zoom can decrease while actively " +
+             "controlling that character. Keeps the camera from snapping in on switch. " +
+             "Higher = zooms back in faster when moving around. 0 = never zooms back in.")]
+    [SerializeField] private float splitZoomLockDecayRate = 8f;
 
     // Residual per-camera Z pull-back applied immediately after a merge so each
     // camera continues from its exact split position without snapping to the
@@ -573,7 +582,16 @@ public class DividedCameraManager : MonoBehaviour
         {
             // ── Inactive camera smooth time ────────────────────────────────────
             //
-            // Two inputs are blended to produce a final smooth time:
+            // Three inputs are blended to produce a final smooth time:
+            //
+            //  0. Switch blend (highest priority immediately after a switch):
+            //     Both cameras start at switchSmoothTime so they are driven by
+            //     the exact same curve during the reframe. Without this the
+            //     active camera (SmoothDamp) and the inactive camera
+            //     (distance/velocity based) use completely different profiles,
+            //     making the two panels feel out-of-sync and wobbly.
+            //     This fades out over SwitchSmoothFade seconds just like the
+            //     active camera's own blend.
             //
             //  1. Distance-based (quadratic): drops steeply as characters
             //     approach so the camera is tightly converged near the merge
@@ -604,8 +622,14 @@ public class DividedCameraManager : MonoBehaviour
             float speedBlend     = Mathf.Clamp01(approachSpeed / InactiveApproachSpeedCap);
             float inactiveSmooth = Mathf.Lerp(distSmooth, InactiveCamSmoothTimeNear, speedBlend);
 
-            if (topIsActive) MoveX(bottomVirtualCamera.transform, convergenceX, ref _botVelX, inactiveSmooth);
-            else             MoveX(topVirtualCamera.transform,    convergenceX, ref _topVelX, inactiveSmooth);
+            // Blend from switchSmoothTime → inactiveSmooth over SwitchSmoothFade
+            // so that immediately after a character switch both cameras are driven
+            // by the same smooth time, then diverge to their individual targets.
+            float switchBlend        = Mathf.Clamp01(_switchTimer / SwitchSmoothFade);
+            float inactiveSmoothFinal = Mathf.Lerp(switchSmoothTime, inactiveSmooth, switchBlend);
+
+            if (topIsActive) MoveX(bottomVirtualCamera.transform, convergenceX, ref _botVelX, inactiveSmoothFinal);
+            else             MoveX(topVirtualCamera.transform,    convergenceX, ref _topVelX, inactiveSmoothFinal);
         }
 
         // ── Vertical follow + Z pull-back (split mode) ───────────────────────
@@ -636,15 +660,59 @@ public class DividedCameraManager : MonoBehaviour
         float topBaseZoomFrac = Mathf.Max(splitBaseZoom, _currentZoom);
         float botBaseZoomFrac = Mathf.Max(splitBaseZoom, _currentZoom);
 
-        float topPullTarget = Mathf.Min(
-            (topBaseZoomFrac + topVertFrac) * _topOriginalDist, maxSplitZPullback);
-        float botPullTarget = Mathf.Min(
-            (botBaseZoomFrac + botVertFrac) * _botOriginalDist, maxSplitZPullback);
+        // ── Per-camera zoom targets ────────────────────────────────────────────
+        //
+        // Active camera:
+        //   • Computes the natural pull-back from the character's vertical position.
+        //   • _lockedSplitZoom acts as a FLOOR: the camera cannot zoom in below it.
+        //   • The lock itself decays toward the natural target at splitZoomLockDecayRate,
+        //     so controlling the character and losing vertical distance gradually
+        //     lets the camera zoom back in — it never snaps inward on a switch.
+        //   • If the natural target exceeds the lock (zooming out further), the lock
+        //     jumps immediately to match.
+        //
+        // Inactive camera:
+        //   • Lock is completely frozen. Target = locked value. No change until active.
 
-        _topSplitZoom = Mathf.SmoothDamp(_topSplitZoom, topPullTarget,
-                                          ref _topSplitZoomVel, splitZoomSmoothTime);
-        _botSplitZoom = Mathf.SmoothDamp(_botSplitZoom, botPullTarget,
-                                          ref _botSplitZoomVel, splitZoomSmoothTime);
+        if (topIsActive)
+        {
+            float naturalTop = Mathf.Min(
+                (topBaseZoomFrac + topVertFrac) * _topOriginalDist, maxSplitZPullback);
+
+            // Lock can grow instantly but only shrinks at the decay rate.
+            if (naturalTop > _topLockedSplitZoom)
+                _topLockedSplitZoom = naturalTop;
+            else
+                _topLockedSplitZoom = Mathf.Max(naturalTop,
+                    _topLockedSplitZoom - splitZoomLockDecayRate * Time.deltaTime);
+
+            float topPullTarget = Mathf.Max(naturalTop, _topLockedSplitZoom);
+            _topSplitZoom = Mathf.SmoothDamp(_topSplitZoom, topPullTarget,
+                                              ref _topSplitZoomVel, splitZoomSmoothTime);
+
+            // Inactive (bot) — hold completely frozen.
+            _botSplitZoom = Mathf.SmoothDamp(_botSplitZoom, _botLockedSplitZoom,
+                                              ref _botSplitZoomVel, splitZoomSmoothTime);
+        }
+        else
+        {
+            float naturalBot = Mathf.Min(
+                (botBaseZoomFrac + botVertFrac) * _botOriginalDist, maxSplitZPullback);
+
+            if (naturalBot > _botLockedSplitZoom)
+                _botLockedSplitZoom = naturalBot;
+            else
+                _botLockedSplitZoom = Mathf.Max(naturalBot,
+                    _botLockedSplitZoom - splitZoomLockDecayRate * Time.deltaTime);
+
+            float botPullTarget = Mathf.Max(naturalBot, _botLockedSplitZoom);
+            _botSplitZoom = Mathf.SmoothDamp(_botSplitZoom, botPullTarget,
+                                              ref _botSplitZoomVel, splitZoomSmoothTime);
+
+            // Inactive (top) — hold completely frozen.
+            _topSplitZoom = Mathf.SmoothDamp(_topSplitZoom, _topLockedSplitZoom,
+                                              ref _topSplitZoomVel, splitZoomSmoothTime);
+        }
 
         ApplySplitPositions();
 
@@ -741,13 +809,58 @@ public class DividedCameraManager : MonoBehaviour
 
         if (topIsActive) _botVelX = 0f; else _topVelX = 0f;
 
-        // Seed the split-mode Z pull-back from the current Together-mode zoom.
-        // Because Together mode now uses the identical Z pull-back formula, the
-        // cameras are ALREADY at exactly this position — no snap occurs at split.
-        _topSplitZoom    = _currentZoom * _topOriginalDist + _postMergeTopPullback;
-        _botSplitZoom    = _currentZoom * _botOriginalDist + _postMergeBotPullback;
-        _topSplitZoomVel = _postMergeTopVel;
-        _botSplitZoomVel = _postMergeBotVel;
+        // Physical camera Z pull-back at split time — seeding _topSplitZoom from these
+        // prevents any snap since the cameras are already at exactly this position.
+        float physTopZoom = _currentZoom * _topOriginalDist + _postMergeTopPullback;
+        float physBotZoom = _currentZoom * _botOriginalDist + _postMergeBotPullback;
+
+        // Zoom TARGET derived from actual character world positions right now.
+        // _currentZoom lags behind its target (SmoothDamp). If the split fires before
+        // _currentZoom converged — e.g. a large vertical gap opened and characters
+        // immediately separated horizontally — physZoom is much smaller than the target.
+        // Seeding the lock from max(physical, target) guarantees cameras zoom out to
+        // the correct distance regardless of how fast the split was triggered.
+        // _topSplitZoom / _botSplitZoom still start at physZoom so there is no snap;
+        // SmoothDamp carries them smoothly to the lock floor over splitZoomSmoothTime.
+        float splitVSpan     = Mathf.Abs(topCharacter.position.y - bottomCharacter.position.y);
+        float splitDistX     = Mathf.Abs(topCharacter.position.x - bottomCharacter.position.x);
+        float avgOrigDist    = Mathf.Max((_topOriginalDist + _botOriginalDist) * 0.5f, 0.001f);
+        float hFrac          = Mathf.Clamp01(splitDistX / _splitDist);
+        float zoomAtSplit    = baseZoom + additionalZoom * hFrac
+                             + splitVSpan * verticalZoomMultiplier / avgOrigDist;
+        float targetTopUnits = Mathf.Min(zoomAtSplit * _topOriginalDist, maxSplitZPullback);
+        float targetBotUnits = Mathf.Min(zoomAtSplit * _botOriginalDist, maxSplitZPullback);
+
+        if (topIsActive)
+        {
+            // Active top: lock = max(physical, target, prev) so a quick split before
+            // _currentZoom converged never under-zooms the camera the player controls.
+            _topSplitZoom       = physTopZoom;
+            _topSplitZoomVel    = _postMergeTopVel;
+            _topLockedSplitZoom = Mathf.Max(Mathf.Max(physTopZoom, targetTopUnits), _topLockedSplitZoom);
+
+            // Inactive bot: lock = physical only — camera holds exactly where it was.
+            // targetBotUnits must NOT be applied here; it would force the inactive
+            // camera to zoom out to match the current character separation, which is
+            // the "fully zoomed out on split" bug the user reported.
+            _botSplitZoom       = physBotZoom;
+            _botSplitZoomVel    = 0f;
+            _botLockedSplitZoom = Mathf.Max(physBotZoom, _botLockedSplitZoom);
+            if (_botLockedSplitZoom <= 0f) _botLockedSplitZoom = _botSplitZoom;
+        }
+        else
+        {
+            // Active bot: lock = max(physical, target, prev).
+            _botSplitZoom       = physBotZoom;
+            _botSplitZoomVel    = _postMergeBotVel;
+            _botLockedSplitZoom = Mathf.Max(Mathf.Max(physBotZoom, targetBotUnits), _botLockedSplitZoom);
+
+            // Inactive top: lock = physical only.
+            _topSplitZoom       = physTopZoom;
+            _topSplitZoomVel    = 0f;
+            _topLockedSplitZoom = Mathf.Max(physTopZoom, _topLockedSplitZoom);
+            if (_topLockedSplitZoom <= 0f) _topLockedSplitZoom = _topSplitZoom;
+        }
 
         // Post-merge residuals are now absorbed into the split zoom — clear them.
         _postMergeTopPullback = 0f;
@@ -880,24 +993,57 @@ public class DividedCameraManager : MonoBehaviour
     /// <summary>Resets follow state when the active character changes.</summary>
     private void HandleCharacterSwitched()
     {
-        _topVelX         = 0f;
-        _botVelX         = 0f;
-        _topLookAheadX   = 0f;
-        _botLookAheadX   = 0f;
-        _topLookAheadVel = 0f;
-        _botLookAheadVel = 0f;
-        _switchTimer     = 0f;
+        _topVelX = 0f;
+        _botVelX = 0f;
+        _switchTimer = 0f;
         // Split zoom state is intentionally NOT reset here — cameras stay at their
         // current zoom level and SmoothDamp to the new character's position naturally.
 
-        if (_state != CamState.Split) return;
+        if (_state != CamState.Split)
+        {
+            _topLookAheadX   = 0f;
+            _botLookAheadX   = 0f;
+            _topLookAheadVel = 0f;
+            _botLookAheadVel = 0f;
+            return;
+        }
 
-        // Recompute _inactiveFixedX for the new pairing and start a fresh pan
-        // from wherever the new inactive camera currently sits.
         bool newTopIsActive = switchManager != null
                            && switchManager.ActiveCharacter != null
                            && switchManager.ActiveCharacter.transform == topCharacter;
 
+        // Seed the NEWLY ACTIVE character's look-ahead from the camera's actual offset
+        // relative to its character rather than from zero.
+        //
+        // Resetting to zero causes a direction reversal: the camera first travels toward
+        // the character (zero look-ahead target) then reverses as the look-ahead builds
+        // in the facing direction. This is the "rebound" effect on the bottom camera.
+        //
+        // Starting from the clamped offset means the initial target already matches
+        // the camera's current position, so the camera only moves as the look-ahead
+        // decays toward the facing direction — always in one direction.
+        //
+        // The NEWLY INACTIVE character's look-ahead resets to zero so it does not
+        // bleed into the next active phase.
+        if (newTopIsActive)
+        {
+            float topOffset  = topVirtualCamera.transform.position.x - topCharacter.position.x;
+            _topLookAheadX   = Mathf.Clamp(topOffset, -MaxLookAheadUnits, MaxLookAheadUnits);
+            _topLookAheadVel = 0f;
+            _botLookAheadX   = 0f;
+            _botLookAheadVel = 0f;
+        }
+        else
+        {
+            float botOffset  = bottomVirtualCamera.transform.position.x - bottomCharacter.position.x;
+            _botLookAheadX   = Mathf.Clamp(botOffset, -MaxLookAheadUnits, MaxLookAheadUnits);
+            _botLookAheadVel = 0f;
+            _topLookAheadX   = 0f;
+            _topLookAheadVel = 0f;
+        }
+
+        // Recompute _inactiveFixedX for the new pairing and start a fresh pan
+        // from wherever the new inactive camera currently sits.
         float newActiveCharX   = newTopIsActive ? topCharacter.position.x    : bottomCharacter.position.x;
         float newInactiveCharX = newTopIsActive ? bottomCharacter.position.x : topCharacter.position.x;
         float dir              = Mathf.Sign(newActiveCharX - newInactiveCharX);
@@ -906,6 +1052,13 @@ public class DividedCameraManager : MonoBehaviour
         _inactiveStartX   = newTopIsActive
                           ? bottomVirtualCamera.transform.position.x
                           : topVirtualCamera.transform.position.x;
-        _inactivePanTimer = 0f;
+        // Do NOT restart Phase 1 on a character switch — the cameras are already
+        // in split positions and only need to reframe to the new pairing.
+        // Phase 1 (SmoothStep + SetX) is reserved for FireSplit, which pans from
+        // the Together position into the initial split positions. Re-triggering it
+        // on a switch gives the inactive camera a completely different motion curve
+        // (SmoothStep) from the active camera (SmoothDamp), causing the wobbly
+        // out-of-sync feel. Skip straight to Phase 2 by setting the timer to done.
+        _inactivePanTimer = inactivePanDuration;
     }
 }

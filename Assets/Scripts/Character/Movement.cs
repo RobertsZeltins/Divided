@@ -160,6 +160,9 @@ public class Movement : MonoBehaviour
     [SerializeField] private float dashCooldown = 0.4f;
 
     private bool  _isDashing;
+
+    /// <summary>True while an active dash is in progress.</summary>
+    public bool IsDashing => _isDashing;
     private float _dashTimer;
     private float _dashCooldownTimer;
     private bool  _canAirDash   = true;
