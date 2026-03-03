@@ -486,7 +486,7 @@
                 {
                     "name": "",
                     "id": "c26c927f-74b4-4c0c-a822-bb7e829c8a14",
-                    "path": "<Gamepad>/leftTrigger",
+                    "path": "<XInputController>/leftShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
