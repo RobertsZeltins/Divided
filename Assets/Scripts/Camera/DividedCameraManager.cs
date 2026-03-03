@@ -827,8 +827,7 @@ public class DividedCameraManager : MonoBehaviour
         _topCharBaseY = topCharacter.position.y;
         _botCharBaseY = bottomCharacter.position.y;
 
-        // Instant appearance — no fade-in animation on split.
-        splitScreenEffect.FadeDivider(true, 0f);
+        splitScreenEffect.FadeDivider(true, 0.25f);
     }
 
     /// <summary>Smoothly moves a camera's X using SmoothDamp.</summary>
