@@ -81,6 +81,11 @@ public class DividedCameraManager : MonoBehaviour
              "separations and gives a small visual lead-up to the split.")]
     [SerializeField] private float splitConfirmTime = 0.3f;
 
+    [Tooltip("How long the divider takes to fade out when characters reunite. " +
+             "The divider stays fully visible during split and only starts fading " +
+             "once the cameras have converged and the state switches to Together.")]
+    [SerializeField] private float mergeFadeDuration = 0.65f;
+
     [Header("Follow")]
     [SerializeField] private float followSmoothTime = 0.15f;
 
@@ -158,21 +163,20 @@ public class DividedCameraManager : MonoBehaviour
     private float _inactivePanTimer;
 
     // Inactive camera smooth time scales with character separation using a
-    // quadratic curve so the drop near merge is steep — the camera converges
-    // tightly before the merge fires, keeping the snap imperceptible.
+    // quadratic curve. InactiveCamSmoothTimeFar applies when characters are apart;
+    // InactiveCamSmoothTimeNear applies near merge AND when approach speed is high.
+    // Both values are deliberately moderate — the camera should visibly SLIDE to its
+    // convergence target, not snap. Snapping was the root cause of the "insanely fast"
+    // merge feel at speed.
     private const float InactiveCamSmoothTimeFar  = 0.4f;
-    private const float InactiveCamSmoothTimeNear = 0.008f;
+    private const float InactiveCamSmoothTimeNear = 0.25f;
 
     // At this horizontal approach speed (m/s) the inactive camera smooth time
-    // drops fully to InactiveCamSmoothTimeNear. Covers dash (25), burrow exit
-    // (18), and running jumps. Below this speed the distance-based curve is used.
+    // blends fully to InactiveCamSmoothTimeNear.
     private const float InactiveApproachSpeedCap = 18f;
 
     // Frame-to-frame distX delta gives the true approach rate regardless of
     // whether it comes from horizontal velocity, diagonal movement, etc.
-    // A short exponential memory (0.1 s) prevents a one-frame deceleration
-    // spike (e.g. wallJumpControlTimer expiring) from instantly killing the
-    // tracking adaptation while the camera still needs to converge.
     private float _prevDistX;
     private float _smoothedApproachRate;
 
@@ -181,20 +185,14 @@ public class DividedCameraManager : MonoBehaviour
     private float _splitHoldTimer;
 
     // How long characters have continuously been within mergeDistance.
-    // Merge requires this to be satisfied alongside camera alignment so that
-    // a fast burrow launch cannot snap the cameras before they have converged.
     private const float MergeConfirmTime = 0.08f;
     private float _mergeHoldTimer;
 
-    // Post-merge blend: after the state switches to Together the previously-inactive
-    // camera eases toward sharedX over MergeBlendDuration instead of snapping.
-    // The blend is fully covered by the divider fade so the panel change reads as
-    // a smooth cinematic convergence rather than a hard cut.
-    private const float MergeBlendDuration   = 0.15f;
-    private const float MergeBlendSmoothTime = 0.05f;
-    private bool  _mergeBlending;
-    private float _mergeBlendTimer;
-    private float _mergeBlendVelX;
+    // After MergeConfirmTime the inactive camera must be within this world-unit gap
+    // of the active camera before the merge fires. With InactiveCamSmoothTimeNear = 0.25f
+    // the camera slides visibly into position — by the time camGap is this small the
+    // two panels look identical and the state switch is completely imperceptible.
+    private const float MergeCameraAlignThreshold = 0.4f;
 
     private float _topVelX;
     private float _botVelX;
@@ -445,36 +443,14 @@ public class DividedCameraManager : MonoBehaviour
         // Post-merge blend: the previously-inactive camera eases toward sharedX
         // over MergeBlendDuration so the panel transition is a smooth pan, not a snap.
         // The active camera always uses sharedX directly — no change to its tracking.
-        float topRenderX = sharedX;
-        float botRenderX = sharedX;
-        if (_mergeBlending)
-        {
-            _mergeBlendTimer += Time.deltaTime;
-            if (_mergeBlendTimer < MergeBlendDuration)
-            {
-                // Read the inactive virtual camera's current X (previous frame value, not yet written).
-                float inactivePrevX = topIsActive
-                    ? bottomVirtualCamera.transform.position.x
-                    : topVirtualCamera.transform.position.x;
-                float inactiveBlendX = Mathf.SmoothDamp(
-                    inactivePrevX, sharedX, ref _mergeBlendVelX, MergeBlendSmoothTime);
-                if (topIsActive) botRenderX = inactiveBlendX;
-                else             topRenderX = inactiveBlendX;
-            }
-            else
-            {
-                _mergeBlending = false;
-            }
-        }
-
-        topVirtualCamera.transform.position    = new Vector3(topRenderX, _topOriginalY, topNewZ);
-        bottomVirtualCamera.transform.position = new Vector3(botRenderX, _botOriginalY, botNewZ);
+        topVirtualCamera.transform.position    = new Vector3(sharedX, _topOriginalY, topNewZ);
+        bottomVirtualCamera.transform.position = new Vector3(sharedX, _botOriginalY, botNewZ);
 
         Vector3 topInner = VirtualViewportToWorldPoint(topCamera, topVirtualCamera.transform, new Vector3(0.5f, 0f, topNewDist));
         Vector3 botInner = VirtualViewportToWorldPoint(bottomCamera, bottomVirtualCamera.transform, new Vector3(0.5f, 1f, botNewDist));
 
-        topVirtualCamera.transform.position    = new Vector3(topRenderX, _topOriginalY + (_topDivLineY - topInner.y), topNewZ);
-        bottomVirtualCamera.transform.position = new Vector3(botRenderX, _botOriginalY + (_botDivLineY - botInner.y), botNewZ);
+        topVirtualCamera.transform.position    = new Vector3(sharedX, _topOriginalY + (_topDivLineY - topInner.y), topNewZ);
+        bottomVirtualCamera.transform.position = new Vector3(sharedX, _botOriginalY + (_botDivLineY - botInner.y), botNewZ);
 
         if (distX > _splitDist)
         {
@@ -720,54 +696,34 @@ public class DividedCameraManager : MonoBehaviour
         {
             _mergeHoldTimer += Time.deltaTime;
 
-            // Read the inactive virtual camera's position after this frame's MoveX so
-            // the proximity check reflects where it actually landed.
-            float inactiveCamX  = topIsActive ? bottomVirtualCamera.transform.position.x
-                                              : topVirtualCamera.transform.position.x;
-            float camGap        = Mathf.Abs(inactiveCamX - activeCamX);
+            float inactiveCamX = topIsActive ? bottomVirtualCamera.transform.position.x
+                                             : topVirtualCamera.transform.position.x;
+            float camGap = Mathf.Abs(inactiveCamX - activeCamX);
 
-            // mergeBlendT == 1 at distX == mergeDistance, so convergenceX == activeCamX
-            // and camGap is already near zero — the 0.5-unit threshold reliably fires
-            // without any visible snap. Force-merge covers fast overshoots.
-            //
-            // MergeConfirmTime guard ensures the inactive camera always has at least
-            // a few frames to converge before the merge fires, preventing the visible
-            // snap that occurs when a burrow launch closes the gap faster than the
-            // camera can track. Force-merge is intentionally tight (0.1×) so it only
-            // fires as a last resort when characters are nearly overlapping.
-            bool camerasAligned = camGap < 0.5f && _mergeHoldTimer >= MergeConfirmTime;
-            bool forceMerge     = distX < mergeDistance * 0.1f;
+            // With InactiveCamSmoothTimeNear = 0.25f the inactive camera slides
+            // visibly into position. By the time camGap is below the threshold the
+            // two panels look identical, so the state switch is imperceptible.
+            // The divider then fades AFTER the switch — it stays fully visible
+            // for the entire split and only disappears on the actual merge.
+            bool camerasAligned = camGap < MergeCameraAlignThreshold
+                                && _mergeHoldTimer >= MergeConfirmTime;
 
-            if (camerasAligned || forceMerge)
+            if (camerasAligned)
             {
-                // Do not snap cameras with SetX — the merge blend in DriveTogetherCameras
-                // will ease the previously-inactive camera to sharedX over MergeBlendDuration,
-                // producing a smooth pan rather than a single-frame position jump.
-                float inactiveVel = topIsActive ? _botVelX : _topVelX;
-                float activeVel   = topIsActive ? _topVelX : _botVelX;
-                _mergeBlendVelX  = inactiveVel;
-                _mergeBlending   = true;
-                _mergeBlendTimer = 0f;
+                float activeVel = topIsActive ? _topVelX : _botVelX;
                 _topVelX = activeVel;
                 _botVelX = activeVel;
 
                 _state = CamState.Together;
-                splitScreenEffect.FadeDivider(false);
+                splitScreenEffect.FadeDivider(false, mergeFadeDuration);
 
-                // Convert the split pull-back to the Together zoom factor so the
-                // Together camera starts at the EXACT same physical position the
-                // split cameras were at — zero snap, since both modes now use the
-                // same Z pull-back formula.  k_equiv = s / origDist.
                 float topK = _topSplitZoom / Mathf.Max(_topOriginalDist, 0.001f);
                 float botK = _botSplitZoom / Mathf.Max(_botOriginalDist, 0.001f);
                 _currentZoom = (topK + botK) * 0.5f;
-                _zoomVel     = 0f;
 
-                // Each camera's actual Z pull-back at merge time may differ from
-                // the shared average (_currentZoom × origDist) when the characters
-                // are at very different vertical positions. Store the residual for
-                // each camera so DriveTogetherCameras can smooth it to zero rather
-                // than snapping both cameras to the averaged position instantly.
+                _zoomVel = (_topSplitZoomVel / Mathf.Max(_topOriginalDist, 0.001f)
+                          + _botSplitZoomVel / Mathf.Max(_botOriginalDist, 0.001f)) * 0.5f;
+
                 _postMergeTopPullback = _topSplitZoom - _currentZoom * _topOriginalDist;
                 _postMergeBotPullback = _botSplitZoom - _currentZoom * _botOriginalDist;
                 _postMergeTopVel      = _topSplitZoomVel;
@@ -778,8 +734,6 @@ public class DividedCameraManager : MonoBehaviour
                 _topSplitZoomVel = 0f;
                 _botSplitZoomVel = 0f;
                 _mergeHoldTimer  = 0f;
-                // No position reset needed — DriveTogetherCameras will apply
-                // the identical Z/Y positions on the very next frame using _currentZoom.
             }
         }
         else
@@ -804,8 +758,6 @@ public class DividedCameraManager : MonoBehaviour
         _inactiveStartX   = (topIsActive ? bottomVirtualCamera : topVirtualCamera).transform.position.x;
         _inactivePanTimer = 0f;
         _mergeHoldTimer   = 0f;
-        _mergeBlending    = false;
-        _mergeBlendTimer  = 0f;
 
         if (topIsActive) _botVelX = 0f; else _topVelX = 0f;
 
@@ -875,7 +827,8 @@ public class DividedCameraManager : MonoBehaviour
         _topCharBaseY = topCharacter.position.y;
         _botCharBaseY = bottomCharacter.position.y;
 
-        splitScreenEffect.FadeDivider(true);
+        // Instant appearance — no fade-in animation on split.
+        splitScreenEffect.FadeDivider(true, 0f);
     }
 
     /// <summary>Smoothly moves a camera's X using SmoothDamp.</summary>

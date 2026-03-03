@@ -44,10 +44,14 @@ public class SplitScreenEffect : MonoBehaviour
 
     /// <summary>Smoothly fades the divider line in or out with asymmetric durations.</summary>
     public void FadeDivider(bool visible)
+        => FadeDivider(visible, visible ? fadeInDuration : fadeOutDuration);
+
+    /// <summary>Smoothly fades the divider line in or out over the specified duration.</summary>
+    public void FadeDivider(bool visible, float duration)
     {
         _fadeStartAlpha  = VisualAlpha;
         _fadeTargetAlpha = visible ? 1f : 0f;
-        _fadeDuration    = visible ? fadeInDuration : fadeOutDuration;
+        _fadeDuration    = Mathf.Max(duration, 0.001f);
         _fadeElapsed     = 0f;
     }
 
