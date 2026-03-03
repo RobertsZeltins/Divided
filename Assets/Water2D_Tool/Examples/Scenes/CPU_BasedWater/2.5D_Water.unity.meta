@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: fe00366ead0ba54418f520dab81dfad8
+timeCreated: 1441215062
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Scenes/CPU_BasedWater/2.5D_Water.unity
+  uploadId: 646776

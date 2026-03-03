@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: f04e9e4dd9733b9448376b0ec2adf1f9
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Animations/WaterAnimations/LeftWall.controller
+  uploadId: 646776

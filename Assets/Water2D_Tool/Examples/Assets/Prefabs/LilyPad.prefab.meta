@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ef8c814aaf4e3ba448fb205f27badc1f
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Prefabs/LilyPad.prefab
+  uploadId: 646776

@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: b6971ca9c426d254ca343b7eb74a8b26
+timeCreated: 1512575814
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Assets/Scripts/Utils/Water2D_PlanarReflection.cs
+  uploadId: 646776

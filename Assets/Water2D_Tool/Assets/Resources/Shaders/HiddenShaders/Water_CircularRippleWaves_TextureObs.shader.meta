@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 86c2484ab66a7a24f861a4e709cdf7c4
+timeCreated: 1500705880
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Assets/Resources/Shaders/HiddenShaders/Water_CircularRippleWaves_TextureObs.shader
+  uploadId: 646776

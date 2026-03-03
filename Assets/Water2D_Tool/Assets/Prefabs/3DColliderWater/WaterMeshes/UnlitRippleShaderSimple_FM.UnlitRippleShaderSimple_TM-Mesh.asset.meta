@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 924a7466d73cc4241a963c1ac49a0e6d
+timeCreated: 1514211967
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 4300000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Assets/Prefabs/3DColliderWater/WaterMeshes/UnlitRippleShaderSimple_FM.UnlitRippleShaderSimple_TM-Mesh.asset
+  uploadId: 646776

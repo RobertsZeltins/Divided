@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: da42c22006b32424c9e1d6f299e7f515
+timeCreated: 1511874687
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Prefabs/GoBackToMainMenu.prefab
+  uploadId: 646776

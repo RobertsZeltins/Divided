@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 6939695cdcff85944a3f6d43972e242b
+timeCreated: 1514115232
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 4300000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Assets/Prefabs/2DColliderWater/WaterMeshes/LitRippleShader_FM.LitRippleShader_TM-Mesh.asset
+  uploadId: 646776

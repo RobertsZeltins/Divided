@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 40813610b84645f4a90233de8b9e4412
+timeCreated: 1510752471
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Assets/Shaders/UnlitWaterRippleBasic_FM.shader
+  uploadId: 646776

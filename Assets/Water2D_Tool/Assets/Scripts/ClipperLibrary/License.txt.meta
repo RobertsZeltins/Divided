@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 0ab25eb959468314ba56e796a1dd1acf
+TextScriptImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Assets/Scripts/ClipperLibrary/License.txt
+  uploadId: 646776

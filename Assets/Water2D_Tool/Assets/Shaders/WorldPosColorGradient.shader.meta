@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: c3bf9ed9d534eac4e8a818b0603c049d
+timeCreated: 1513852993
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Assets/Shaders/WorldPosColorGradient.shader
+  uploadId: 646776

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 78048f605efca0944b21a2469592a7bd
+timeCreated: 1513936073
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Scenes/GPU_BasedWater/BigLake_Unlit.unity
+  uploadId: 646776

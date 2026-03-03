@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 5a41b405597d87d47bd287543573fc05
+timeCreated: 1513495604
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Assets/Scripts/Editor/Water2DShaderInspector_TM.cs
+  uploadId: 646776

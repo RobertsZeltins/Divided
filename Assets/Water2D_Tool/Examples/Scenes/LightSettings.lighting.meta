@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 3c8bc3dda87094246aa75d547824b0b3
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 4890085278179872738
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Scenes/LightSettings.lighting
+  uploadId: 646776

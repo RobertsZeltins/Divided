@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: b3d5ff953766a1d4fa3850270d61a01a
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Scenes/CPU_BasedWater/BigWavesInteraction.unity
+  uploadId: 646776

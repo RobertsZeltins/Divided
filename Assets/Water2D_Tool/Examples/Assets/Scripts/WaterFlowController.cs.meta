@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: d0fc76633ca88dc40930ded7bf6d0b0c
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Scripts/WaterFlowController.cs
+  uploadId: 646776

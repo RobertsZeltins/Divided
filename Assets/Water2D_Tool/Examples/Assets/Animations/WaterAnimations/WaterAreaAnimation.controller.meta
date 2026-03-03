@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: c64e7dbb2d2e19c4aa4f34acbb614240
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Animations/WaterAnimations/WaterAreaAnimation.controller
+  uploadId: 646776

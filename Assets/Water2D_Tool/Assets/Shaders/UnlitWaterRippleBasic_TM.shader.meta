@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 1a399269a964cc24f959241d45b8fdf6
+timeCreated: 1510750028
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Assets/Shaders/UnlitWaterRippleBasic_TM.shader
+  uploadId: 646776

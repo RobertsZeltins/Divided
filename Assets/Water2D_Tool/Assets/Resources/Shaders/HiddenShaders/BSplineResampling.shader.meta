@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 2192a3ca9f19c09479cfa9aa43e15d67
+timeCreated: 1508937386
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Assets/Resources/Shaders/HiddenShaders/BSplineResampling.shader
+  uploadId: 646776

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 1db6825f37bd61c42a6f71c28dc7dfa6
+timeCreated: 1508937386
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Assets/Resources/Shaders/HiddenShaders/NormalFromHeightMap.shader
+  uploadId: 646776

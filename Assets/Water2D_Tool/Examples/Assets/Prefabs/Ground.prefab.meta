@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: f263d8ddf3be1644684a4a9208e83527
+timeCreated: 1514665072
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Prefabs/Ground.prefab
+  uploadId: 646776

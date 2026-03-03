@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 52c4248ee13a45f478b7620454779b39
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Prefabs/WaterFlower.prefab
+  uploadId: 646776

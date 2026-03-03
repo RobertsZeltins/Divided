@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 0d4e787ec1c92044aa7c1b1a61b23195
+timeCreated: 1501227055
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Scripts/PauseGame.cs
+  uploadId: 646776

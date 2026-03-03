@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 51eb597a88e9b0e46a339af8d87bf2b0
+timeCreated: 1514551076
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Models/Materials/Midle.mat
+  uploadId: 646776

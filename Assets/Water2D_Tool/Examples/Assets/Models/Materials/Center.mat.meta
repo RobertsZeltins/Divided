@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: bac3e988aa9f57f4ba279b33e78a6ed6
+timeCreated: 1514318324
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Models/Materials/Center.mat
+  uploadId: 646776

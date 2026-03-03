@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 218089dd22974694da8401e8665640cc
+timeCreated: 1501010302
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Models/Materials/Rock_02.mat
+  uploadId: 646776

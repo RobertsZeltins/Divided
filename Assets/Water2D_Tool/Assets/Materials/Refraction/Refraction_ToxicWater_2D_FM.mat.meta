@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c0ae6961b25a4b7489c28a7a5d170b16
+timeCreated: 1441212773
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Assets/Materials/Refraction/Refraction_ToxicWater_2D_FM.mat
+  uploadId: 646776

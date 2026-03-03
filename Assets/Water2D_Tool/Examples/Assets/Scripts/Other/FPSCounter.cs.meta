@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 046c3c11fa2c07841b6a50800f91f85f
+timeCreated: 1511713998
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Scripts/Other/FPSCounter.cs
+  uploadId: 646776

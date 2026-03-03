@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 477c63b96cd4567469d661c659d7fdd8
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Scripts/MoveObjects.cs
+  uploadId: 646776

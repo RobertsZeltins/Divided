@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 826eec995dcc5674a8901b73f8aa9cab
+timeCreated: 1513415175
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Assets/Resources/Shaders/HiddenShaders/Water2DHiddenInclude.cginc
+  uploadId: 646776

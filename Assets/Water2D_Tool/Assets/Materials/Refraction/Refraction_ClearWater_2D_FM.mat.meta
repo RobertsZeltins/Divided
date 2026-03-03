@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: e7075384ad0453947a733993cf0efa53
+timeCreated: 1441212789
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Assets/Materials/Refraction/Refraction_ClearWater_2D_FM.mat
+  uploadId: 646776

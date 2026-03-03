@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 75c1a27e25d32b3488c5ba1ad16007da
+timeCreated: 1510498159
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Assets/Scripts/Utils/RippleSource.cs
+  uploadId: 646776

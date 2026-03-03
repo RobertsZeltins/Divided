@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: c9f72962e76f67e49bc0ac1b6fc381dc
+timeCreated: 1511684819
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Scripts/Other/WaterSettings.cs
+  uploadId: 646776

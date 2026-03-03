@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 2b1e6edc24db4ff448eff881e9fc217a
+timeCreated: 1514898922
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 7400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Animations/YAxisPosition.anim
+  uploadId: 646776

@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 7b68f94166921ec448f564fcb5350539
+timeCreated: 1514491009
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Models/Materials/Pine_Leaves.mat
+  uploadId: 646776

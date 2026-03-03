@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 8357788872a2398408e0fe297ebad592
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Scenes/CPU_BasedWater/SandBox_01.unity
+  uploadId: 646776

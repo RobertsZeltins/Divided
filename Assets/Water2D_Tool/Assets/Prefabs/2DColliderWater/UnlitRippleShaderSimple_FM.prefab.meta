@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 0c39325d346b61643ac48050a675d3e1
+timeCreated: 1514212399
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Assets/Prefabs/2DColliderWater/UnlitRippleShaderSimple_FM.prefab
+  uploadId: 646776

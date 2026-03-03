@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 7ea93b49b0aefbe428415f4a8d917bd3
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Prefabs/BigLake_01.prefab
+  uploadId: 646776

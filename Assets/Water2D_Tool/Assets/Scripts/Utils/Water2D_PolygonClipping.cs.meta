@@ -1,0 +1,25 @@
+fileFormatVersion: 2
+guid: 215ed213121524942828ca5ea8b0a9cb
+labels:
+- Buoyancy
+- Water
+- Water2D
+- 2DWater
+- Physics
+- WaterAnimation
+- 2.5D
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Assets/Scripts/Utils/Water2D_PolygonClipping.cs
+  uploadId: 646776

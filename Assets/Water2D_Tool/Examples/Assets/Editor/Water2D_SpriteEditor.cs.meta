@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 6cad6b9511c3daf4da59ef4f854420dd
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Editor/Water2D_SpriteEditor.cs
+  uploadId: 646776

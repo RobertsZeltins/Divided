@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 0d0fa8cc967938d4b8f4dd8f465fe6cd
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Prefabs/PineTree.prefab
+  uploadId: 646776

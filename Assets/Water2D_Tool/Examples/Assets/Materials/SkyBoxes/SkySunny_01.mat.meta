@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ec7cce21e96eb8f48831b898f4ef580f
+timeCreated: 1502085265
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Materials/SkyBoxes/SkySunny_01.mat
+  uploadId: 646776

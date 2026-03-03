@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 7a0f47cf7c01b4844b91e1773ff3c6da
+timeCreated: 1513859740
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Models/TestModels/Materials/Ground_01.mat
+  uploadId: 646776

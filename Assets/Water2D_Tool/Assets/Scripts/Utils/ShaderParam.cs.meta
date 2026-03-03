@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 927935af24c5eb844ae0c81d2db5ab33
+timeCreated: 1513688407
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Assets/Scripts/Utils/ShaderParam.cs
+  uploadId: 646776

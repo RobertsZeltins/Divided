@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: ef57fe29fcd39d348b58add70d02e4c6
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Prefabs/SmallLake_01.prefab
+  uploadId: 646776

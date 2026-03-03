@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 801e0558e4ab94846aaf355c91191655
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Scenes/CPU_BasedWater/SandBox_3DCollider.unity
+  uploadId: 646776

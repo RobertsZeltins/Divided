@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 7a2033a2a2deba742a532c15c998788e
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Scripts/2DCharacterController/PlatformerCharacter2D.cs
+  uploadId: 646776

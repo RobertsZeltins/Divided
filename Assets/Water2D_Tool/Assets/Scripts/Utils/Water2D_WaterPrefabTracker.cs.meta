@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 8e073e8366afbb443992442734862f3c
+timeCreated: 1512658178
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Assets/Scripts/Utils/Water2D_WaterPrefabTracker.cs
+  uploadId: 646776

@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 4888c3ab408dd434bb94633b86bff78e
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Prefabs/Lever.prefab
+  uploadId: 646776

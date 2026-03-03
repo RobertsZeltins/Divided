@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: 26f0ed62f3b3dd1498ae96b36c3d747b
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Animations/Lever/Lever.controller
+  uploadId: 646776

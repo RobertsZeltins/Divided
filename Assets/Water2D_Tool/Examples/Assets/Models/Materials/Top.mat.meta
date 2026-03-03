@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: d043f2a398e2ee6448ad13900780c535
+timeCreated: 1514551076
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 2100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Models/Materials/Top.mat
+  uploadId: 646776

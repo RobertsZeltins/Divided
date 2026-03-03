@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: dc0dc174360748a45948337657aec75d
+PrefabImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 35521
+  packageName: Water 2D Tool
+  packageVersion: 1.12.1
+  assetPath: Assets/Water2D_Tool/Examples/Assets/Prefabs/Rock_04.prefab
+  uploadId: 646776
