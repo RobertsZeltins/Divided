@@ -8,12 +8,8 @@ using UnityEngine.InputSystem;
 /// Input layout:
 ///   Move     — WASD / left stick          (InputActionReference, shared)
 ///   Jump     — Spacebar / South button    (InputActionReference)
-///   Switch   — assigned in Inspector      (InputActionReference)
-///   Dig      — Left Shift                 (created in code, no .inputactions edit needed)
-///
-/// The Dig action is always routed to BottomDigging regardless of which
-/// character is active, so the player can launch the bottom character out
-/// of sand even after switching to the top character mid-burrow.
+///   Switch   — Tab / LB                   (InputActionReference)
+///   Dig/Dash — Left Shift / RB            (InputActionReference, via digAction)
 /// </summary>
 public class CharacterSwitchManager : MonoBehaviour
 {
@@ -25,13 +21,14 @@ public class CharacterSwitchManager : MonoBehaviour
     [SerializeField] private InputActionReference moveAction;
     [SerializeField] private InputActionReference jumpAction;
     [SerializeField] private InputActionReference switchAction;
+    [Tooltip("Action that drives dig (bottom) and dash (top). " +
+             "Assign the Dig/Sprint action from InputSystem_Actions — " +
+             "add both <Keyboard>/leftShift and <Gamepad>/rightShoulder bindings there.")]
+    [SerializeField] private InputActionReference digAction;
 
     [Header("Abilities")]
     [Tooltip("DiggingAbility on the bottom character.")]
     [SerializeField] private DiggingAbility bottomDigging;
-
-    // Created in code — binds Left Shift without touching the .inputactions asset.
-    private InputAction _digAction;
 
     private Movement _activeCharacter;
     private Movement _inactiveCharacter;
@@ -43,7 +40,6 @@ public class CharacterSwitchManager : MonoBehaviour
 
     private void Awake()
     {
-        _digAction = new InputAction("Dig", InputActionType.Button, "<Keyboard>/leftShift");
         SetActiveCharacter(topCharacter);
     }
 
@@ -52,27 +48,27 @@ public class CharacterSwitchManager : MonoBehaviour
         moveAction.action.Enable();
         jumpAction.action.Enable();
         switchAction.action.Enable();
-        _digAction.Enable();
+        digAction.action.Enable();
 
-        jumpAction.action.started  += HandleJumpStarted;
-        jumpAction.action.canceled += HandleJumpCanceled;
+        jumpAction.action.started   += HandleJumpStarted;
+        jumpAction.action.canceled  += HandleJumpCanceled;
         switchAction.action.started += HandleSwitchStarted;
-        _digAction.started  += HandleDigStarted;
-        _digAction.canceled += HandleDigCanceled;
+        digAction.action.started    += HandleDigStarted;
+        digAction.action.canceled   += HandleDigCanceled;
     }
 
     private void OnDisable()
     {
-        jumpAction.action.started  -= HandleJumpStarted;
-        jumpAction.action.canceled -= HandleJumpCanceled;
+        jumpAction.action.started   -= HandleJumpStarted;
+        jumpAction.action.canceled  -= HandleJumpCanceled;
         switchAction.action.started -= HandleSwitchStarted;
-        _digAction.started  -= HandleDigStarted;
-        _digAction.canceled -= HandleDigCanceled;
+        digAction.action.started    -= HandleDigStarted;
+        digAction.action.canceled   -= HandleDigCanceled;
 
         moveAction.action.Disable();
         jumpAction.action.Disable();
         switchAction.action.Disable();
-        _digAction.Disable();
+        digAction.action.Disable();
     }
 
     private void Update()
@@ -86,7 +82,6 @@ public class CharacterSwitchManager : MonoBehaviour
 
     private void HandleJumpStarted(InputAction.CallbackContext context)
     {
-        // Spacebar is pure jump — dig is handled by the separate shift action.
         _activeCharacter?.OnJumpPressed();
     }
 
@@ -96,18 +91,16 @@ public class CharacterSwitchManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Shift is context-aware:
+    /// Dig/Dash is context-aware:
     ///   • Always routes to bottomDigging when the bottom character is actively
     ///     burrowing — so the player can launch it out of sand even after switching
     ///     to the top character mid-burrow.
     ///   • Routes to bottomDigging for sand entry only when bottom is the active character.
     ///   • Routes to the top character's dash when top is the active character.
-    /// This prevents accidentally diving the bottom character into sand while the
-    /// player is trying to dash the top character.
     /// </summary>
     private void HandleDigStarted(InputAction.CallbackContext context)
     {
-        bool bottomIsActive   = _activeCharacter == bottomCharacter;
+        bool bottomIsActive    = _activeCharacter == bottomCharacter;
         bool bottomIsBurrowing = bottomDigging != null
                               && bottomDigging.Phase != DiggingAbility.BurrowPhase.Idle;
 
