@@ -188,6 +188,13 @@ public class DividedCameraManager : MonoBehaviour
     private const float MergeConfirmTime = 0.08f;
     private float _mergeHoldTimer;
 
+    // After a split or merge fires, the reverse transition is blocked for this
+    // duration. Prevents the state from thrashing when distX hovers on the boundary.
+    [Tooltip("Seconds to lock out the reverse transition after any split or merge fires. " +
+             "Prevents the divider from flashing when characters hover on the boundary.")]
+    [SerializeField] private float stateChangeCooldown = 0.8f;
+    private float _stateChangeCooldown;
+
     // After MergeConfirmTime the inactive camera must be within this world-unit gap
     // of the active camera before the merge fires. With InactiveCamSmoothTimeNear = 0.25f
     // the camera slides visibly into position — by the time camGap is this small the
@@ -378,7 +385,8 @@ public class DividedCameraManager : MonoBehaviour
         // accounts for both characters, not just the currently active one.
         float verticalSpan = Mathf.Abs(topCharacter.position.y - bottomCharacter.position.y);
 
-        _switchTimer += Time.deltaTime;
+        _switchTimer        += Time.deltaTime;
+        _stateChangeCooldown = Mathf.Max(0f, _stateChangeCooldown - Time.deltaTime);
 
         ApplyZoom(distX, verticalSpan);
 
@@ -455,10 +463,8 @@ public class DividedCameraManager : MonoBehaviour
         if (distX > _splitDist)
         {
             float dynamicSplitDist = _splitDist * (1f + _currentZoom);
-            if (distX > dynamicSplitDist)
+            if (distX > dynamicSplitDist && _stateChangeCooldown <= 0f)
             {
-                // Require characters to stay beyond the threshold for splitConfirmTime
-                // seconds before firing, preventing accidental splits on brief separations.
                 _splitHoldTimer += Time.deltaTime;
                 if (_splitHoldTimer >= splitConfirmTime)
                     FireSplit(topIsActive);
@@ -700,13 +706,9 @@ public class DividedCameraManager : MonoBehaviour
                                              : topVirtualCamera.transform.position.x;
             float camGap = Mathf.Abs(inactiveCamX - activeCamX);
 
-            // With InactiveCamSmoothTimeNear = 0.25f the inactive camera slides
-            // visibly into position. By the time camGap is below the threshold the
-            // two panels look identical, so the state switch is imperceptible.
-            // The divider then fades AFTER the switch — it stays fully visible
-            // for the entire split and only disappears on the actual merge.
             bool camerasAligned = camGap < MergeCameraAlignThreshold
-                                && _mergeHoldTimer >= MergeConfirmTime;
+                                && _mergeHoldTimer >= MergeConfirmTime
+                                && _stateChangeCooldown <= 0f;
 
             if (camerasAligned)
             {
@@ -714,7 +716,8 @@ public class DividedCameraManager : MonoBehaviour
                 _topVelX = activeVel;
                 _botVelX = activeVel;
 
-                _state = CamState.Together;
+                _state               = CamState.Together;
+                _stateChangeCooldown = stateChangeCooldown;
                 splitScreenEffect.FadeDivider(false, mergeFadeDuration);
 
                 float topK = _topSplitZoom / Mathf.Max(_topOriginalDist, 0.001f);
@@ -747,7 +750,9 @@ public class DividedCameraManager : MonoBehaviour
     /// <summary>Transitions to Split state and initialises the inactive camera pan.</summary>
     private void FireSplit(bool topIsActive)
     {
-        _state = CamState.Split;
+        _state               = CamState.Split;
+        _stateChangeCooldown = stateChangeCooldown;
+        _splitHoldTimer      = 0f;
 
         float activeCharX   = topIsActive ? topCharacter.position.x    : bottomCharacter.position.x;
         float inactiveCharX = topIsActive ? bottomCharacter.position.x : topCharacter.position.x;

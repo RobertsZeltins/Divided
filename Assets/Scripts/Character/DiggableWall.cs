@@ -37,10 +37,23 @@ public class DiggableWall : MonoBehaviour
         _originalMaterial = _sandRenderer != null ? _sandRenderer.sharedMaterial : null;
 
         BuildHoleMaterial();
+
+        // Apply the hole material immediately and keep it forever.
+        // Switching materials at burrow start/end caused a visible color pop
+        // because URP can produce different GI/shadow results per material instance.
+        // With a permanent single material there is nothing to switch — holes are
+        // controlled purely through the _HoleMap texture.
+        if (_sandRenderer != null && _holeMaterial != null)
+            _sandRenderer.sharedMaterial = _holeMaterial;
     }
 
     private void OnDestroy()
     {
+        // Restore the original so the asset is not left pointing at our runtime material
+        // in the Editor after play mode ends.
+        if (_sandRenderer != null && _originalMaterial != null)
+            _sandRenderer.sharedMaterial = _originalMaterial;
+
         if (_holeMaterial != null) Destroy(_holeMaterial);
         if (_holeTexture  != null) Destroy(_holeTexture);
     }
@@ -67,8 +80,6 @@ public class DiggableWall : MonoBehaviour
         if (_activeBurrowers.Count == 1)
         {
             ClearHoleTexture();
-            if (_sandRenderer != null)
-                _sandRenderer.sharedMaterial = _holeMaterial != null ? _holeMaterial : _originalMaterial;
             if (sandParticles != null) sandParticles.Play();
         }
     }
@@ -100,12 +111,11 @@ public class DiggableWall : MonoBehaviour
         _holeTexture.Apply(false, false);
     }
 
-    /// <summary>Clears holes and restores the original material. Called by BurrowVisuals when trail closes.</summary>
+    /// <summary>Clears holes. Called by BurrowVisuals when the trail closes.</summary>
     public void ClearHoles()
     {
         ClearHoleTexture();
-        if (_sandRenderer != null)
-            _sandRenderer.sharedMaterial = _originalMaterial;
+        // No material restore — wall stays on _holeMaterial permanently.
     }
 
     // ── Internal ──────────────────────────────────────────────────────────────
@@ -122,6 +132,20 @@ public class DiggableWall : MonoBehaviour
         for (int i = 0; i < MaxHoles; i++) _holePixels[i] = Color.clear;
         _holeTexture.SetPixels(_holePixels);
         _holeTexture.Apply(false, false);
+    }
+
+    /// <summary>
+    /// Copies a texture and its tiling/offset from the original material to the
+    /// hole material, translating the source property name to the destination one.
+    /// No-ops silently if the source property doesn't exist or has no texture.
+    /// </summary>
+    private void CopyTexture(Material source, string srcProp, string dstProp)
+    {
+        if (!source.HasProperty(srcProp)) return;
+        Texture tex = source.GetTexture(srcProp);
+        if (tex == null) return;
+        _holeMaterial.SetTexture(dstProp, tex);
+        _holeMaterial.SetVector(dstProp + "_ST", source.GetVector(srcProp + "_ST"));
     }
 
     private void BuildHoleMaterial()
@@ -141,24 +165,38 @@ public class DiggableWall : MonoBehaviour
 
         _holeMaterial = new Material(sh) { name = "BurrowHole_Runtime" };
 
-        // Inherit sand colour
-        Color c = new Color(0.82f, 0.65f, 0.28f, 1f);
-        if (_originalMaterial != null)
+        if (_originalMaterial == null)
         {
-            if      (_originalMaterial.HasProperty("_BaseColor")) c = _originalMaterial.GetColor("_BaseColor");
-            else if (_originalMaterial.HasProperty("_Color"))     c = _originalMaterial.GetColor("_Color");
+            _holeMaterial.SetTexture(HoleMapId, _holeTexture);
+            return;
         }
+
+        // ── Base colour ───────────────────────────────────────────────────────
+        Color c = new Color(0.82f, 0.65f, 0.28f, 1f);
+        if      (_originalMaterial.HasProperty("_BaseColor")) c = _originalMaterial.GetColor("_BaseColor");
+        else if (_originalMaterial.HasProperty("_Color"))     c = _originalMaterial.GetColor("_Color");
         c.a = 1f;
         _holeMaterial.SetColor("_BaseColor", c);
 
-        // Inherit texture
-        if (_originalMaterial != null)
-        {
-            Texture tex = null;
-            if      (_originalMaterial.HasProperty("_BaseMap"))  tex = _originalMaterial.GetTexture("_BaseMap");
-            else if (_originalMaterial.HasProperty("_MainTex"))  tex = _originalMaterial.GetTexture("_MainTex");
-            if (tex != null) _holeMaterial.SetTexture("_MainTex", tex);
-        }
+        // ── Albedo texture + tiling ───────────────────────────────────────────
+        CopyTexture(_originalMaterial, "_BaseMap", "_BaseMap");
+        CopyTexture(_originalMaterial, "_MainTex", "_BaseMap"); // fallback
+
+        // ── Normal map ────────────────────────────────────────────────────────
+        CopyTexture(_originalMaterial, "_BumpMap", "_BumpMap");
+        if (_originalMaterial.HasProperty("_BumpScale"))
+            _holeMaterial.SetFloat("_BumpScale", _originalMaterial.GetFloat("_BumpScale"));
+
+        // ── Occlusion ─────────────────────────────────────────────────────────
+        CopyTexture(_originalMaterial, "_OcclusionMap", "_OcclusionMap");
+        if (_originalMaterial.HasProperty("_OcclusionStrength"))
+            _holeMaterial.SetFloat("_OcclusionStrength", _originalMaterial.GetFloat("_OcclusionStrength"));
+
+        // ── Smoothness / Metallic ─────────────────────────────────────────────
+        if (_originalMaterial.HasProperty("_Smoothness"))
+            _holeMaterial.SetFloat("_Smoothness", _originalMaterial.GetFloat("_Smoothness"));
+        if (_originalMaterial.HasProperty("_Metallic"))
+            _holeMaterial.SetFloat("_Metallic",   _originalMaterial.GetFloat("_Metallic"));
 
         _holeMaterial.SetTexture(HoleMapId, _holeTexture);
     }

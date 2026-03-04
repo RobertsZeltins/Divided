@@ -542,8 +542,17 @@ public class DiggingAbility : MonoBehaviour
 
     // ── Helpers ───────────────────────────────────────────────────────────────
 
+    /// <summary>
+    /// Set to false by CharacterSwitchManager when this character is inactive.
+    /// Prevents burrowing steering from consuming the other player's move input.
+    /// Launch via OnDigPressed still works regardless of this flag.
+    /// </summary>
+    public bool ReceiveInput { get; set; } = true;
+
     private Vector2 ReadInput()
     {
+        if (!ReceiveInput) return Vector2.zero;
+
         if (moveAction != null && moveAction.action != null)
             return moveAction.action.ReadValue<Vector2>();
 

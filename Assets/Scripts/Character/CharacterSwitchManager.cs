@@ -134,6 +134,12 @@ public class CharacterSwitchManager : MonoBehaviour
         _activeCharacter?.ClearInput();
         _activeCharacter   = target;
         _inactiveCharacter = _activeCharacter == topCharacter ? bottomCharacter : topCharacter;
+
+        // Allow burrowing steering only when the bottom character is active.
+        // The launch button (OnDigPressed) ignores this flag and always works.
+        if (bottomDigging != null)
+            bottomDigging.ReceiveInput = (_activeCharacter == bottomCharacter);
+
         OnCharacterSwitched?.Invoke();
     }
 }
